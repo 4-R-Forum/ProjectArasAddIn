@@ -1,0 +1,46 @@
+Project Aras AddIn
+
+Release notes
+
+This AddIn provides functionality to Import and Export MS Project .mpp files to and from Aras Innovator Projects. It supports 64-bit applications Project 2013 and 2016 and is tested with Innovator v11SP9. A different AddIn will be required for 32-bit versions such as Project 2010 and earlier. Earlier Project Import Export packages used .Net controls which are not supported by Chrome, Firefox and Edge, which are supported by v11SP9.
+
+ProjectArasAddIn v0.1		First public release		04/14/2017
+
+
+Deployment Guide
+	1. There is no package to Import to the database, and no setup is needed on the server.
+	2. MS Project 2013 or 2016 must be installed on the client.
+	3. Download the Aras Community Solution from http://Github.com/ScriptSet6/ProjectArasAddIn
+	4. Remove any prior versions installed by uninstalling from ControlPanel/Programs and Features/ProjectAddIn1
+	5. Run setup.exe from the downloaded files
+	6. Confirm that the AddIn is installed by inspecting ControlPanel/Programs and Features
+	7. See UserGuide for User Tasks and steps
+	
+User Guide
+
+Import Project
+	1. Open an mpp file in MS Project
+	2. Remove any blank lines and precedence to roll up tasks, if present you will get a warning to remove them.
+	3. Select the AddIns tab from the Project Ribbon
+	4. Click the Log in to Aras tiny button at bottom right of the AddIn -> Form opens
+	5. Enter credentials, these will be saved after first login, use a trailing / at the end of the url
+	6. Click Login -> Form closes, or displays error message
+	7. Click MS Project to Aras in the Ribbon -> Project starts to load
+	8. Wait for Dialog "Project Imported Successfully", Click OK.
+	9. Inspect the project in Aras.
+	10. It may be necessary to restart MS Project to import another mpp.
+	
+Export Project	
+	1. Start MS Project for new project
+	2. Select the AddIns tab from the Project Ribbon
+	3. Click the Log in to Aras tiny button at bottom right of the AddIn -> Form opens
+	4. Enter credentials, these will be saved after first login, use a trailing / at the end of the url
+	5. Click Login -> Form closes, or displays error message
+	6. Select project number from dropdown in Ribbon AddIn
+	7. Click Aras to MS Project in Ribon -> Project starts to download
+	8. Downloaded project is displayed.
+	9. Save project as desired
+	10. It may be necessary to restart MS Project to export another project.
+	
+Jon Hodge, 04/14/2016
+jhodge@aras.com

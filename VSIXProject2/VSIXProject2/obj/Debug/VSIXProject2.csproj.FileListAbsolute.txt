@@ -1,0 +1,6 @@
+C:\Repos\ProjectArasAddIn\VSIXProject2\VSIXProject2\bin\Debug\VSIXProject2.vsix
+C:\Repos\ProjectArasAddIn\VSIXProject2\VSIXProject2\bin\Debug\extension.vsixmanifest
+C:\Repos\ProjectArasAddIn\VSIXProject2\VSIXProject2\obj\Debug\VSIXProject2.csprojResolveAssemblyReference.cache
+C:\Repos\ProjectArasAddIn\VSIXProject2\VSIXProject2\obj\Debug\VSIXProject2.dll
+C:\Repos\ProjectArasAddIn\VSIXProject2\VSIXProject2\obj\Debug\VSIXProject2.pdb
+C:\Repos\ProjectArasAddIn\VSIXProject2\VSIXProject2\obj\Debug\extension.vsixmanifest

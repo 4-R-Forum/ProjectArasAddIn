@@ -2,19 +2,21 @@ Project Aras AddIn
 
 Release notes
 
-This AddIn provides functionality to Import and Export MS Project .mpp files to and from Aras Innovator Projects. It supports 64-bit applications Project 2013 and 2016 and is tested with Innovator v11SP9. A different AddIn will be required for 32-bit versions such as Project 2010 and earlier. Earlier Project Import Export packages used .Net controls which are not supported by Chrome, Firefox and Edge, which are supported by v11SP9.
+This AddIn provides functionality to Import and Export MS Project .mpp files to and from Aras Innovator Projects. It supports 64-bit applications Project 2013 and 2016 and is tested with Innovator v11SP9. A different AddIn will be required for 32-bit versions such as Project 2010 and earlier. Earlier Project Import Export packages used .Net controls which are not supported by Chrome, Firefox and Edge, browsers supported by v11SP9.
 
 ProjectArasAddIn v0.1		First public release		04/14/2017
+												Package for Export			10/23/2017
 
 
 Deployment Guide
 	1. There is no package to Import to the database, and no setup is needed on the server.
-	2. MS Project 2013 or 2016 must be installed on the client.
-	3. Download the Aras Community Solution from http://Github.com/ScriptSet6/ProjectArasAddIn
-	4. Remove any prior versions installed by uninstalling from ControlPanel/Programs and Features/ProjectAddIn1
-	5. Run setup.exe from the downloaded files
-	6. Confirm that the AddIn is installed by inspecting ControlPanel/Programs and Features
-	7. See UserGuide for User Tasks and steps
+	2. A package is in the repository is required to Export from the database, use the ImportExport tool to apply it.
+	3. MS Project 2013 or 2016 must be installed on the client.
+	4. Download the repository from http://Github.com/ScriptSet6/ProjectArasAddIn
+	5. Remove any prior versions installed by uninstalling from ControlPanel/Programs and Features/ProjectAddIn1
+	6. Run setup.exe from the downloaded files
+	7. Confirm that the AddIn is installed by inspecting ControlPanel/Programs and Features
+	8. See UserGuide for User Tasks and steps
 	
 User Guide
 

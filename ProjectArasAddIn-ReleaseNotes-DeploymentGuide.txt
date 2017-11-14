@@ -22,7 +22,7 @@ User Guide
 
 Import Project
 	1. Open an mpp file in MS Project
-	2. Remove any blank lines and precedence to roll up tasks, if present you will get a warning to remove them.
+	2. Remove any blank lines. If any activities have roll up tasks as predecessors, repoint the predecessor to a non-roll up activity. If present, you will get a warning to remove them.
 	3. Select the AddIns tab from the Project Ribbon
 	4. Click the Log in to Aras tiny button at bottom right of the AddIn -> Form opens
 	5. Enter credentials, these will be saved after first login, use a trailing / at the end of the url

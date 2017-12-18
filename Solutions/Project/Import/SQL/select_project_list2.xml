@@ -5,7 +5,7 @@
   <name>select_project_list2</name>
   <old_name>select_project_list2</old_name>
   <sqlserver_body><![CDATA[CREATE FUNCTION innovator.select_project_list2 (@PROJECT_ID as char(32))
-RETURNS @PROJECT_LIST TABLE (N INTEGER, L INTEGER,  AN INTEGER, TYPE CHAR(1), ID CHAR(32) primary key, name varchar(128), prev_item char(32), parent_id char(32))
+RETURNS @PROJECT_LIST TABLE (N INTEGER, L INTEGER,  AN INTEGER, TYPE CHAR(1), ID CHAR(32) primary key, name varchar(128), prev_item varchar(32), parent_id char(32))
 AS
 begin
 DECLARE @WBS_ID CHAR(32)
@@ -44,7 +44,7 @@ DECLARE @L INTEGER
   SET @N=0
   SET @L=0
   SET @AN=0
-  set @NEXT= (select id from @PROJECT_LIST where (( prev_item is null) and (parent_id is null)))
+  set @NEXT= (select id from @PROJECT_LIST where ((( prev_item is null) or prev_item='')) and (parent_id is null))
      SET @N= @N+1
      UPDATE @PROJECT_LIST SET N= @N, L=@L WHERE ID = @NEXT
     set @NEXT=(SELECT  ID FROM @PROJECT_LIST WHERE ((PREV_ITEM IS NULL) OR (PREV_ITEM='')) AND (PARENT_ID=@NEXT))

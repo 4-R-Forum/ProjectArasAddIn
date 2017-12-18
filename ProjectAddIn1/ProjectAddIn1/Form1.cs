@@ -24,7 +24,8 @@ namespace ProjectAddIn1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string url = tb_url.Text + "Server/InnovatorServer.aspx";
+
+            string url = tb_url.Text + (tb_url.Text.EndsWith("/") ? "":"/")+"Server/InnovatorServer.aspx";
             string db = cb_db.Text;
             string user = tb_user.Text;
             string pw = tb_pw.Text;

@@ -539,7 +539,7 @@ namespace ProjectAddIn1
                             at[x].Start = cs(act.getProperty("date_start_sched"));
                             at[x].Finish =cs(act.getProperty("date_due_sched"));
                         //}
-                        at[x].Estimated = false;
+                        at[x].Estimated = (System.Boolean)false;
                         var res = act.getItemsByXPath("//Item[@type='Activity2 Assignment']");
                         for (var y = 0; y < res.getItemCount(); y++)
                         {

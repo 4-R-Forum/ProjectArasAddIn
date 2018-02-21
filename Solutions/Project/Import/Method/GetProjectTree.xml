@@ -1,0 +1,124 @@
+﻿<AML>
+ <Item type="Method" id="5E6F436D8DCE4EBC8ECC7456193EF7CD" action="add">
+  <execution_allowed_to keyed_name="World" type="Identity">A73B655731924CD0B027E4F4D5FCC0A9</execution_allowed_to>
+  <method_code><![CDATA[Innovator innovatorInstance = this.getInnovator();
+System.Diagnostics.Debugger.Break();
+
+string projectId = this.getProperty("project_id", "");
+
+if(string.IsNullOrWhiteSpace(projectId))
+{
+    return innovatorInstance.newItem();
+}
+
+Item projectItem = innovatorInstance.newItem("Project", "get");
+projectItem.setID(projectId);
+projectItem = projectItem.apply();
+
+if (projectItem.isError()) {
+    return projectItem;
+}
+
+String requestAml = string.Format(CultureInfo.CurrentCulture, @"
+    		<Item type='WBS Element' levels='100' action='get' id='{0}'>
+    		    <Relationships>
+    		    <Item type='Sub WBS' levels='100' action='get'/>
+    		    <Item type='WBS Activity2' action='get'>
+    		        <related_id>
+    		            <Item>
+    		            <Relationships>
+    		                <Item type='Activity2 Assignment' action='get'/>
+    		                <Item type='Predecessor' action='get'/>
+    		            </Relationships>
+    		            </Item>
+    		        </related_id>
+    		    </Item>
+    			</Relationships>
+    		</Item>",projectItem.getPropertyItem("wbs_id").getID());
+
+Item topWBS = innovatorInstance.newItem();
+topWBS.loadAML(requestAml);
+topWBS = topWBS.apply();
+
+int itemNumber = 1;
+int level = 1;
+
+var test = innovatorInstance.newItem();
+test.loadAML(topWBS.getItemsByXPath("//Item[@type='WBS Element'][id='"+projectItem.getPropertyItem("wbs_id").getID()+"']").node.OuterXml);
+
+RemoveRelationshipItems(test);
+Item resultItem = innovatorInstance.newItem();
+AddSortNumbers(test, ref itemNumber, level, resultItem);
+
+return test;
+
+}
+
+static void RemoveRelationshipItems(Item parent) {
+        var relationships =  parent.getRelationships();
+        var count = relationships.getItemCount();
+        List<Item> addItems = new List<Item>();
+        List<Item> removeItems = new List<Item>();
+        
+        for(int i=0; i<count; i++)
+        {
+            var item = relationships.getItemByIndex(i);
+            var relatedItem = item.getRelatedItem();
+            
+            if(relatedItem.getType() == "WBS Element")
+            {
+               RemoveRelationshipItems(relatedItem);
+            }
+            
+            addItems.Add(relatedItem);
+            removeItems.Add(item);
+        }
+        
+        foreach(Item item in removeItems)
+        {
+            parent.removeRelationship(item);
+        }
+        foreach(Item item in addItems)
+        {
+            parent.addRelationship(item);
+        }
+}
+
+static void AddSortNumbers(Item parent, ref int itemNumber, int level, Item resultItem) {
+    
+        var relationships =  parent.getRelationships();
+        var count = relationships.getItemCount();
+        List<Item> tempItems = new List<Item>();
+        string prevItemId = string.Empty;
+        
+        for(int i=0; i<count; i++)
+        {
+            var rItem = relationships.getItemByIndex(i);
+            tempItems.Add(rItem);
+        }
+        
+        Item item = null;
+        
+        do{
+            item = tempItems.FirstOrDefault(it=>it.getProperty("prev_item", string.Empty) == prevItemId);
+            
+            if(item!=null)
+            {
+                item.setProperty("n", itemNumber++.ToString());
+                item.setProperty("l", level.ToString());
+                
+                if(item.getType()== "WBS Element")
+                {
+                    AddSortNumbers(item, ref itemNumber, level+1, resultItem);
+                }
+                
+                prevItemId = item.getID();
+                resultItem.appendItem(item);
+            }
+        }
+        while (item != null);
+]]></method_code>
+  <method_type>C#</method_type>
+  <name>GetProjectTree</name>
+ </Item>
+</AML>

@@ -8,7 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProjectAddIn1.Properties {
+namespace MS_Project_Import_Export.Properties {
+    using System;
     
     
     /// <summary>
@@ -18,7 +19,7 @@ namespace ProjectAddIn1.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -38,7 +39,7 @@ namespace ProjectAddIn1.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ProjectAddIn1.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MS_Project_Import_Export.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -56,6 +57,33 @@ namespace ProjectAddIn1.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dependency to Rollup Task at rows {0} not allowed in Import. Please edit Project and try again..
+        /// </summary>
+        internal static string ERROR_ROLLUP_NOT_ALLOWED {
+            get {
+                return ResourceManager.GetString("ERROR_ROLLUP_NOT_ALLOWED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project imported successfully..
+        /// </summary>
+        internal static string PROJECT_IMPORTED {
+            get {
+                return ResourceManager.GetString("PROJECT_IMPORTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MS Project Import/Export.
+        /// </summary>
+        internal static string TITLE {
+            get {
+                return ResourceManager.GetString("TITLE", resourceCulture);
             }
         }
     }

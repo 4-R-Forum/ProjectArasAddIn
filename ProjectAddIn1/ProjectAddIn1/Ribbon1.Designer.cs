@@ -1,4 +1,4 @@
-﻿namespace ProjectAddIn1
+﻿namespace MS_Project_Import_Export
 {
     partial class Ribbon1 : Microsoft.Office.Tools.Ribbon.RibbonBase
     {
@@ -37,9 +37,10 @@
             Microsoft.Office.Tools.Ribbon.RibbonDialogLauncher ribbonDialogLauncherImpl1 = this.Factory.CreateRibbonDialogLauncher();
             this.tab1 = this.Factory.CreateRibbonTab();
             this.ArasMSProject = this.Factory.CreateRibbonGroup();
-            this.button1 = this.Factory.CreateRibbonButton();
-            this.button2 = this.Factory.CreateRibbonButton();
-            this.dropDown1 = this.Factory.CreateRibbonDropDown();
+            this.btn_loginToAras = this.Factory.CreateRibbonButton();
+            this.btn_projectToAras = this.Factory.CreateRibbonButton();
+            this.btn_arasToProject = this.Factory.CreateRibbonButton();
+            this.dd_projects = this.Factory.CreateRibbonDropDown();
             this.tab1.SuspendLayout();
             this.ArasMSProject.SuspendLayout();
             this.SuspendLayout();
@@ -53,30 +54,37 @@
             // 
             // ArasMSProject
             // 
+            ribbonDialogLauncherImpl1.Enabled = false;
             this.ArasMSProject.DialogLauncher = ribbonDialogLauncherImpl1;
-            this.ArasMSProject.Items.Add(this.button1);
-            this.ArasMSProject.Items.Add(this.button2);
-            this.ArasMSProject.Items.Add(this.dropDown1);
+            this.ArasMSProject.Items.Add(this.btn_loginToAras);
+            this.ArasMSProject.Items.Add(this.btn_projectToAras);
+            this.ArasMSProject.Items.Add(this.btn_arasToProject);
+            this.ArasMSProject.Items.Add(this.dd_projects);
             this.ArasMSProject.Label = "Login to Aras";
             this.ArasMSProject.Name = "ArasMSProject";
-            this.ArasMSProject.DialogLauncherClick += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.logon_launcher);
             // 
-            // button1
+            // btn_loginToAras
             // 
-            this.button1.Label = "MSProject to Aras";
-            this.button1.Name = "button1";
-            this.button1.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.button1_Click);
+            this.btn_loginToAras.Label = "Login to Aras";
+            this.btn_loginToAras.Name = "btn_loginToAras";
+            this.btn_loginToAras.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_loginToAras_Click);
             // 
-            // button2
+            // btn_projectToAras
             // 
-            this.button2.Label = "Aras to MSProject";
-            this.button2.Name = "button2";
-            this.button2.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.button2_Click);
+            this.btn_projectToAras.Label = "MSProject to Aras";
+            this.btn_projectToAras.Name = "btn_projectToAras";
+            this.btn_projectToAras.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_projectToAras_Click);
             // 
-            // dropDown1
+            // btn_arasToProject
             // 
-            this.dropDown1.Label = "Select";
-            this.dropDown1.Name = "dropDown1";
+            this.btn_arasToProject.Label = "Aras to MSProject";
+            this.btn_arasToProject.Name = "btn_arasToProject";
+            this.btn_arasToProject.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_arasToProject_Click);
+            // 
+            // dd_projects
+            // 
+            this.dd_projects.Label = "Select";
+            this.dd_projects.Name = "dd_projects";
             // 
             // Ribbon1
             // 
@@ -96,9 +104,10 @@
 
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tab1;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup ArasMSProject;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton button1;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton button2;
-        internal Microsoft.Office.Tools.Ribbon.RibbonDropDown dropDown1;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_projectToAras;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_arasToProject;
+        internal Microsoft.Office.Tools.Ribbon.RibbonDropDown dd_projects;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_loginToAras;
     }
 
     partial class ThisRibbonCollection

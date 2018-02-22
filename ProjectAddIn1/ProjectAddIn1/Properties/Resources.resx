@@ -126,4 +126,7 @@
   <data name="TITLE" xml:space="preserve">
     <value>MS Project Import/Export</value>
   </data>
+  <data name="UNKNOWN_ASSIGNMENT" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
 </root>

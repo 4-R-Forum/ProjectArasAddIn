@@ -47,8 +47,9 @@ var test = innovatorInstance.newItem();
 test.loadAML(topWBS.getItemsByXPath("//Item[@type='WBS Element'][id='"+projectItem.getPropertyItem("wbs_id").getID()+"']").node.OuterXml);
 
 RemoveRelationshipItems(test);
-Item resultItem = innovatorInstance.newItem();
-AddSortNumbers(test, ref itemNumber, level, resultItem);
+test.setProperty("n", itemNumber++.ToString());
+test.setProperty("l", level++.ToString());
+AddSortNumbers(test, ref itemNumber, level);
 
 return test;
 
@@ -84,7 +85,7 @@ static void RemoveRelationshipItems(Item parent) {
         }
 }
 
-static void AddSortNumbers(Item parent, ref int itemNumber, int level, Item resultItem) {
+static void AddSortNumbers(Item parent, ref int itemNumber, int level) {
     
         var relationships =  parent.getRelationships();
         var count = relationships.getItemCount();
@@ -109,11 +110,10 @@ static void AddSortNumbers(Item parent, ref int itemNumber, int level, Item resu
                 
                 if(item.getType()== "WBS Element")
                 {
-                    AddSortNumbers(item, ref itemNumber, level+1, resultItem);
+                    AddSortNumbers(item, ref itemNumber, level+1);
                 }
                 
                 prevItemId = item.getID();
-                resultItem.appendItem(item);
             }
         }
         while (item != null);

@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MS_Project_Import_Export
 {
@@ -110,9 +108,9 @@ namespace MS_Project_Import_Export
             return item;
         }   
 
-        public List<Item> GetProjects()
+        public Dictionary<string,string> GetProjects()
         {
-            List<Item> result = new List<Item>();
+            Dictionary<string, string> result = new Dictionary<string, string>();
             Item item = innovatorInstance.newItem("Project", "get");
             item = item.apply();
 
@@ -125,7 +123,7 @@ namespace MS_Project_Import_Export
             for (int i = 0; i < itemsCount; i++)
             {
                 var project = item.getItemByIndex(i);
-                result.Add(project);
+                result.Add(project.getProperty("project_number"), project.getID());
             }
 
             return result;

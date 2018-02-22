@@ -86,5 +86,14 @@ namespace MS_Project_Import_Export.Properties {
                 return ResourceManager.GetString("TITLE", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        internal static string UNKNOWN_ASSIGNMENT {
+            get {
+                return ResourceManager.GetString("UNKNOWN_ASSIGNMENT", resourceCulture);
+            }
+        }
     }
 }

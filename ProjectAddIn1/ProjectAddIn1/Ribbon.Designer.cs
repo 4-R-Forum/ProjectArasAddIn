@@ -1,13 +1,13 @@
 ﻿namespace MS_Project_Import_Export
 {
-    partial class Ribbon1 : Microsoft.Office.Tools.Ribbon.RibbonBase
+    partial class Ribbon : Microsoft.Office.Tools.Ribbon.RibbonBase
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        public Ribbon1()
+        public Ribbon()
             : base(Globals.Factory.GetRibbonFactory())
         {
             InitializeComponent();
@@ -37,10 +37,10 @@
             Microsoft.Office.Tools.Ribbon.RibbonDialogLauncher ribbonDialogLauncherImpl1 = this.Factory.CreateRibbonDialogLauncher();
             this.tab1 = this.Factory.CreateRibbonTab();
             this.ArasMSProject = this.Factory.CreateRibbonGroup();
+            this.dd_projects = this.Factory.CreateRibbonDropDown();
             this.btn_loginToAras = this.Factory.CreateRibbonButton();
             this.btn_projectToAras = this.Factory.CreateRibbonButton();
             this.btn_arasToProject = this.Factory.CreateRibbonButton();
-            this.dd_projects = this.Factory.CreateRibbonDropDown();
             this.tab1.SuspendLayout();
             this.ArasMSProject.SuspendLayout();
             this.SuspendLayout();
@@ -60,38 +60,43 @@
             this.ArasMSProject.Items.Add(this.btn_projectToAras);
             this.ArasMSProject.Items.Add(this.btn_arasToProject);
             this.ArasMSProject.Items.Add(this.dd_projects);
-            this.ArasMSProject.Label = "Login to Aras";
+            this.ArasMSProject.Label = "Aras";
             this.ArasMSProject.Name = "ArasMSProject";
+            // 
+            // dd_projects
+            // 
+            this.dd_projects.Enabled = false;
+            this.dd_projects.Label = "Select";
+            this.dd_projects.Name = "dd_projects";
             // 
             // btn_loginToAras
             // 
             this.btn_loginToAras.Label = "Login to Aras";
             this.btn_loginToAras.Name = "btn_loginToAras";
+            this.btn_loginToAras.ShowImage = true;
             this.btn_loginToAras.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_loginToAras_Click);
             // 
             // btn_projectToAras
             // 
+            this.btn_projectToAras.Enabled = false;
             this.btn_projectToAras.Label = "MSProject to Aras";
             this.btn_projectToAras.Name = "btn_projectToAras";
+            this.btn_projectToAras.ShowImage = true;
             this.btn_projectToAras.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_projectToAras_Click);
             // 
             // btn_arasToProject
             // 
+            this.btn_arasToProject.Enabled = false;
             this.btn_arasToProject.Label = "Aras to MSProject";
             this.btn_arasToProject.Name = "btn_arasToProject";
+            this.btn_arasToProject.ShowImage = true;
             this.btn_arasToProject.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_arasToProject_Click);
             // 
-            // dd_projects
+            // Ribbon
             // 
-            this.dd_projects.Label = "Select";
-            this.dd_projects.Name = "dd_projects";
-            // 
-            // Ribbon1
-            // 
-            this.Name = "Ribbon1";
+            this.Name = "Ribbon";
             this.RibbonType = "Microsoft.Project.Project";
             this.Tabs.Add(this.tab1);
-            this.Load += new Microsoft.Office.Tools.Ribbon.RibbonUIEventHandler(this.Ribbon1_Load);
             this.tab1.ResumeLayout(false);
             this.tab1.PerformLayout();
             this.ArasMSProject.ResumeLayout(false);
@@ -112,9 +117,9 @@
 
     partial class ThisRibbonCollection
     {
-        internal Ribbon1 Ribbon1
+        internal Ribbon Ribbon1
         {
-            get { return this.GetRibbon<Ribbon1>(); }
+            get { return this.GetRibbon<Ribbon>(); }
         }
     }
 }

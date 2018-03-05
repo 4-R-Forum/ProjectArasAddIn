@@ -10,6 +10,7 @@ namespace MS_Project_Import_Export
     {
         private static InnovatorManager instance;
         private Innovator innovatorInstance;
+        private TimeZoneInfo innTimeZoneInfo;
 
         private InnovatorManager() { }
 
@@ -25,7 +26,7 @@ namespace MS_Project_Import_Export
             }
         }
 
-        public bool IsLoggedIn { get; set; }       
+        public bool IsLoggedIn { get; set; }
 
         public string LoginToInnovator(string innovatorUrl, string database, string userName, string password)
         {
@@ -106,9 +107,9 @@ namespace MS_Project_Import_Export
             item.setProperty("wbs_id", WBSId);
 
             return item;
-        }   
+        }
 
-        public Dictionary<string,string> GetProjects()
+        public Dictionary<string, string> GetProjects()
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
             Item item = innovatorInstance.newItem("Project", "get");
@@ -129,7 +130,7 @@ namespace MS_Project_Import_Export
             return result;
         }
 
-        public Item ApplyAML (string aml)
+        public Item ApplyAML(string aml)
         {
             return innovatorInstance.applyAML(aml);
         }
@@ -138,16 +139,43 @@ namespace MS_Project_Import_Export
         {
             string convertedDate = date.ToString("u");
             // we need to pass a string to ConvertToNeutral
-            DateTimeFormatInfo dtFormatInfo = new CultureInfo(innovatorInstance.getI18NSessionContext().GetLocale(), false).DateTimeFormat;          
+            DateTimeFormatInfo dtFormatInfo = new CultureInfo(innovatorInstance.getI18NSessionContext().GetLocale(), false).DateTimeFormat;
             // identify the format we are using
-            convertedDate = innovatorInstance.getI18NSessionContext().ConvertToNeutral(convertedDate, "date", dtFormatInfo.UniversalSortableDateTimePattern);          
+            convertedDate = innovatorInstance.getI18NSessionContext().ConvertToNeutral(convertedDate, "date", dtFormatInfo.UniversalSortableDateTimePattern);
             // return the new launch date in neutral format
             return convertedDate;
         }
 
         public DateTime InnovatorDateToLocalDate(string date)
         {
-            return DateTime.Parse(innovatorInstance.getI18NSessionContext().ConvertFromNeutral(date, "date", "long_date"));
+            if (innTimeZoneInfo == null)
+            {
+                innTimeZoneInfo = getInnovatorTimeZone();
+            }
+
+            return TimeZoneInfo.ConvertTime(DateTime.Parse(date), innTimeZoneInfo, TimeZoneInfo.Local);
+        }
+
+        private TimeZoneInfo getInnovatorTimeZone()
+        {
+            var item = innovatorInstance.newItem("Variable", "get");
+            item.setProperty("name", "CorporateTimeZone");
+            item = item.apply();
+            if (item.isError())
+            {
+                return TimeZoneInfo.Local;
+            }
+
+            if (!string.IsNullOrWhiteSpace(item.getProperty("value", string.Empty)))
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(item.getProperty("value"));
+            }
+            if (!string.IsNullOrWhiteSpace(item.getProperty("default_value", string.Empty)))
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(item.getProperty("default_value"));
+            }
+
+            return TimeZoneInfo.Local;
         }
     }
 }

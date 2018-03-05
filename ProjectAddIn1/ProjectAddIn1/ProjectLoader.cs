@@ -159,13 +159,13 @@ namespace MS_Project_Import_Export
             var resources = activeProject.Resources;
             int uasCount = 1; // counter for unknown assigments
             int itemNumber = 1;
-            var currentItem = rootWBS.getItemsByXPath("//Item[n='" + itemNumber + "']");
+            var currentItem = rootWBS.getItemsByXPath("//Item[inumber='" + itemNumber + "']");
 
             while (currentItem.node != null)
             {
-                rowsIds.Add(currentItem.getProperty("id"), currentItem.getProperty("n", string.Empty));
+                rowsIds.Add(currentItem.getProperty("id"), currentItem.getProperty("inumber", string.Empty));
                 var currentTask = tasks.Add(currentItem.getProperty("name"));
-                int level = int.Parse(currentItem.getProperty("l"));
+                int level = int.Parse(currentItem.getProperty("level"));
                 if (level > currentTask.OutlineLevel)
                 {
                     currentTask.OutlineIndent();
@@ -186,7 +186,7 @@ namespace MS_Project_Import_Export
                         setTaskFromActivity(currentTask, currentItem, resources, ref uasCount);
                         break;
                 }
-                currentItem = rootWBS.getItemsByXPath("//Item[n='" + (++itemNumber).ToString() + "']");
+                currentItem = rootWBS.getItemsByXPath("//Item[inumber='" + (++itemNumber).ToString() + "']");
             }
 
             setPredecessors(rootWBS, tasks, rowsIds);
@@ -238,9 +238,10 @@ namespace MS_Project_Import_Export
                 row.Item.setProperty("description", row.Task.Notes);
             }
 
-            row.Item.setProperty("work_est", (row.Task.Work / 60).ToString()); //Work is in minutes
+            row.Item.setProperty("work_est", Math.Round((double)row.Task.Work / 60).ToString()); //Work is in minutes
             row.Item.setProperty("date_start_target", InnovatorManager.Instance.LocalDateToInnovatorDate((DateTime)row.Task.Start));
             row.Item.setProperty("date_due_target", InnovatorManager.Instance.LocalDateToInnovatorDate((DateTime)row.Task.Finish));
+
             if (row.Task.Milestone) // this is a milestone
             {
                 row.Item.setProperty("is_milestone", "1");
@@ -248,7 +249,7 @@ namespace MS_Project_Import_Export
             }
             else // not a milestone
             {
-                row.Item.setProperty("expected_duration", (row.Task.Duration / 60 / 8).ToString()); //Duration is in minutes
+                row.Item.setProperty("expected_duration", Math.Round((double)row.Task.Duration / 60 / 8).ToString()); //Duration is in minutes
             }
             uploadItems.appendItem(row.Item);
 
@@ -302,8 +303,8 @@ namespace MS_Project_Import_Export
                 Item assignmentRelation = InnovatorManager.Instance.CreateNewItem("Activity2 Assignment", "add");
                 assignmentRelation.setProperty("source_id", row.Item.getID());
                 assignmentRelation.setProperty("percent_load", (assignment.Units * 100).ToString());
-                assignmentRelation.setProperty("work_est", (assignment.Work / 60).ToString());
-
+                assignmentRelation.setProperty("work_est", Math.Round((double)assignment.Work / 60).ToString());
+                
                 // if the id of an Identity is known use it, otherwise use the Resource name as a role
                 if (!string.IsNullOrEmpty(assignmentId))
                 {
@@ -344,7 +345,7 @@ namespace MS_Project_Import_Export
 
                         Item predItem = InnovatorManager.Instance.CreateNewItem("Predecessor", "add");
                         predItem.setProperty("precedence_type", predType);
-                        predItem.setProperty("lead_lag", (dependency.Lag / 60 / 8).ToString()); //Lag is minutes in 8 hour day
+                        predItem.setProperty("lead_lag", Math.Round((double)dependency.Lag / 60 / 8).ToString()); //Lag is minutes in 8 hour day
                         predItem.setProperty("source_id", row.Item.getID());
                         predItem.setProperty("related_id", rows.FirstOrDefault(r => r.Task.ID == dependency.From.ID)?.Item.getID());
                         uploadItems.appendItem(predItem);
@@ -355,9 +356,9 @@ namespace MS_Project_Import_Export
 
         private void setTaskFromActivity(Task task, Item item, Resources resources, ref int uasCount)
         {
-            task.Duration = item.getProperty("expected_duration");
-            task.Start = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_start_sched"));
-            task.Finish = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_due_sched"));
+            task.Duration = item.getProperty("expected_duration");            
+            task.Start = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_start_target"));
+            task.Finish = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_due_target"));            
             task.Estimated = false;
             var assignments = item.getRelationships("Activity2 Assignment");
             for (var i = 0; i < assignments.getItemCount(); i++)
@@ -391,7 +392,7 @@ namespace MS_Project_Import_Export
                 for (int y = 0; y < predecessors.getItemCount(); y++)
                 {
                     int taskIndex = 0;
-                    if (!int.TryParse(activity.getProperty("n", string.Empty), out taskIndex))
+                    if (!int.TryParse(activity.getProperty("inumber", string.Empty), out taskIndex))
                     {
                         continue;
                     }

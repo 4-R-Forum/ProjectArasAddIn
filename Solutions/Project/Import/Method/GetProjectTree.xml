@@ -19,82 +19,48 @@ if (projectItem.isError()) {
     return projectItem;
 }
 
-String requestAml = string.Format(CultureInfo.CurrentCulture, @"
-    		<Item type='WBS Element' levels='100' action='get' id='{0}'>
-    		    <Relationships>
-    		    <Item type='Sub WBS' levels='100' action='get'/>
-    		    <Item type='WBS Activity2' action='get'>
-    		        <related_id>
-    		            <Item>
+String requestAml = @"<Item type='WBS Element' action='get' id='{0}'>
     		            <Relationships>
-    		                <Item type='Activity2 Assignment' action='get'/>
-    		                <Item type='Predecessor' action='get'/>
-    		            </Relationships>
-    		            </Item>
-    		        </related_id>
-    		    </Item>
-    			</Relationships>
-    		</Item>",projectItem.getPropertyItem("wbs_id").getID());
+    		                <Item type='Sub WBS' action='get'/>
+    		                <Item type='WBS Activity2' action='get'>
+    		                    <related_id>
+    		                        <Item>
+    		                        <Relationships>
+    		                        <Item type='Activity2 Assignment' action='get'/>
+    		                        <Item type='Predecessor' action='get'/>
+    		                        </Relationships>
+    		                        </Item>
+    		                    </related_id>
+    		                </Item>
+    			        </Relationships>
+    		        </Item>";
 
 Item topWBS = innovatorInstance.newItem();
-topWBS.loadAML(requestAml);
+topWBS.loadAML(string.Format(CultureInfo.CurrentCulture,requestAml, projectItem.getPropertyItem("wbs_id").getID()));
 topWBS = topWBS.apply();
 
 int itemNumber = 1;
 int level = 1;
 
-var test = innovatorInstance.newItem();
-test.loadAML(topWBS.getItemsByXPath("//Item[@type='WBS Element'][id='"+projectItem.getPropertyItem("wbs_id").getID()+"']").node.OuterXml);
+var resultItem = innovatorInstance.newItem();
+resultItem.loadAML(topWBS.getItemsByXPath("//Item[@type='WBS Element'][id='"+projectItem.getPropertyItem("wbs_id").getID()+"']").node.OuterXml);
 
-RemoveRelationshipItems(test);
-test.setProperty("n", itemNumber++.ToString());
-test.setProperty("l", level++.ToString());
-AddSortNumbers(test, ref itemNumber, level);
+resultItem.setProperty("inumber", itemNumber++.ToString());
+resultItem.setProperty("level", level++.ToString());
+AddSortNumbers(resultItem, ref itemNumber, level, innovatorInstance, requestAml);
 
-return test;
+return resultItem;
 
 }
 
-static void RemoveRelationshipItems(Item parent) {
+static void AddSortNumbers(Item parent, ref int itemNumber, int level, Innovator innovatorInstance, string requestAml) {
         var relationships =  parent.getRelationships();
-        var count = relationships.getItemCount();
-        List<Item> addItems = new List<Item>();
-        List<Item> removeItems = new List<Item>();
-        
-        for(int i=0; i<count; i++)
-        {
-            var item = relationships.getItemByIndex(i);
-            var relatedItem = item.getRelatedItem();
-            
-            if(relatedItem.getType() == "WBS Element")
-            {
-               RemoveRelationshipItems(relatedItem);
-            }
-            
-            addItems.Add(relatedItem);
-            removeItems.Add(item);
-        }
-        
-        foreach(Item item in removeItems)
-        {
-            parent.removeRelationship(item);
-        }
-        foreach(Item item in addItems)
-        {
-            parent.addRelationship(item);
-        }
-}
-
-static void AddSortNumbers(Item parent, ref int itemNumber, int level) {
-    
-        var relationships =  parent.getRelationships();
-        var count = relationships.getItemCount();
         List<Item> tempItems = new List<Item>();
         string prevItemId = string.Empty;
         
-        for(int i=0; i<count; i++)
+        for(int i=0; i<relationships.getItemCount(); i++)
         {
-            var rItem = relationships.getItemByIndex(i);
+            var rItem = relationships.getItemByIndex(i).getRelatedItem();
             tempItems.Add(rItem);
         }
         
@@ -105,12 +71,22 @@ static void AddSortNumbers(Item parent, ref int itemNumber, int level) {
             
             if(item!=null)
             {
-                item.setProperty("n", itemNumber++.ToString());
-                item.setProperty("l", level.ToString());
+                item.setProperty("inumber", itemNumber++.ToString());
+                item.setProperty("level", level.ToString());
                 
                 if(item.getType()== "WBS Element")
                 {
-                    AddSortNumbers(item, ref itemNumber, level+1);
+        		    Item titem = innovatorInstance.newItem();
+                    titem.loadAML(string.Format(CultureInfo.CurrentCulture, requestAml,item.getID()));
+                    titem = titem.apply();
+                    
+                    var rships = titem.getRelationships();
+                    for(int j=0; j<rships.getItemCount(); j++)
+                    {
+                        item.addRelationship(rships.getItemByIndex(j));
+                    }
+                
+                    AddSortNumbers(item, ref itemNumber, level+1,innovatorInstance, requestAml);
                 }
                 
                 prevItemId = item.getID();

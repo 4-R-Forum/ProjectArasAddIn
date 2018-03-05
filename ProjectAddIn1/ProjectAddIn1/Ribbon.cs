@@ -9,14 +9,14 @@ namespace MS_Project_Import_Export
         {
             string message = string.Empty;
             ProjectLoader loader = new ProjectLoader();
-            MessageBoxIcon icon = MessageBoxIcon.Error;
+            MessageBoxIcon icon = MessageBoxIcon.Error;            
 
             if (loader.UploadProject(Globals.ThisAddIn.Application.ActiveProject, out message))
             {
                 icon = MessageBoxIcon.Information;
                 message = Properties.Resources.PROJECT_IMPORTED;
             }
-
+            
             MessageBox.Show(message, Properties.Resources.TITLE, MessageBoxButtons.OK, icon);
         }
 

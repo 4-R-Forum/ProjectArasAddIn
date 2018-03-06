@@ -148,6 +148,10 @@ namespace MS_Project_Import_Export
 
         public DateTime InnovatorDateToLocalDate(string date)
         {
+            if (string.IsNullOrWhiteSpace(date))
+            {
+                return DateTime.Today;
+            }
             if (innTimeZoneInfo == null)
             {
                 innTimeZoneInfo = getInnovatorTimeZone();

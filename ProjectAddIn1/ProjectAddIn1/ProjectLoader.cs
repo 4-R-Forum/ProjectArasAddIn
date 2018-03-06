@@ -163,7 +163,7 @@ namespace MS_Project_Import_Export
 
             while (currentItem.node != null)
             {
-                rowsIds.Add(currentItem.getProperty("id"), currentItem.getProperty("inumber", string.Empty));
+                rowsIds.Add(currentItem.getProperty("id"), currentItem.getProperty("inumber", string.Empty));                
                 var currentTask = tasks.Add(currentItem.getProperty("name"));
                 int level = int.Parse(currentItem.getProperty("level"));
                 if (level > currentTask.OutlineLevel)
@@ -357,8 +357,8 @@ namespace MS_Project_Import_Export
         private void setTaskFromActivity(Task task, Item item, Resources resources, ref int uasCount)
         {
             task.Duration = item.getProperty("expected_duration");            
-            task.Start = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_start_target"));
-            task.Finish = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_due_target"));            
+            task.Start = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_start_target", item.getProperty("date_start_sched")));
+            task.Finish = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_due_target", item.getProperty("date_due_sched")));
             task.Estimated = false;
             var assignments = item.getRelationships("Activity2 Assignment");
             for (var i = 0; i < assignments.getItemCount(); i++)

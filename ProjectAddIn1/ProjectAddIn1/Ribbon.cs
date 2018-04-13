@@ -9,21 +9,32 @@ namespace MS_Project_Import_Export
         {
             string message = string.Empty;
             ProjectLoader loader = new ProjectLoader();
-            MessageBoxIcon icon = MessageBoxIcon.Error;            
+            MessageBoxIcon icon = MessageBoxIcon.Error;
 
-            if (loader.UploadProject(Globals.ThisAddIn.Application.ActiveProject, out message))
+            using (new WaitingCursor())
             {
-                icon = MessageBoxIcon.Information;
-                message = Properties.Resources.PROJECT_IMPORTED;
+                if (loader.UploadProject(Globals.ThisAddIn.Application.ActiveProject, out message))
+                {
+                    icon = MessageBoxIcon.Information;
+                    message = Properties.Resources.PROJECT_IMPORTED;
+                }
             }
-            
+
             MessageBox.Show(message, Properties.Resources.TITLE, MessageBoxButtons.OK, icon);
         }
 
         private void btn_arasToProject_Click(object sender, RibbonControlEventArgs e)
         {
-            ProjectLoader loader = new ProjectLoader();
-            loader.DownloadProject(Globals.ThisAddIn.Application.ActiveProject, dd_projects.SelectedItem.Tag.ToString());
+            if (dd_projects.Items.Count == 0 || string.IsNullOrEmpty(dd_projects?.SelectedItem?.Tag?.ToString()))
+            {
+                return;
+            }
+
+            using (new WaitingCursor())
+            {
+                ProjectLoader loader = new ProjectLoader();
+                loader.DownloadProject(Globals.ThisAddIn.Application.ActiveProject, dd_projects.SelectedItem.Tag.ToString());
+            }
         }
 
         private void btn_loginToAras_Click(object sender, RibbonControlEventArgs e)

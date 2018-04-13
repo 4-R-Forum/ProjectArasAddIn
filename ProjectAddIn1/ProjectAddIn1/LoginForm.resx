@@ -312,9 +312,6 @@
   <data name="passwodTextBox.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
-  <data name="passwodTextBox.Text" xml:space="preserve">
-    <value>innovator</value>
-  </data>
   <data name="&gt;&gt;passwodTextBox.Name" xml:space="preserve">
     <value>passwodTextBox</value>
   </data>

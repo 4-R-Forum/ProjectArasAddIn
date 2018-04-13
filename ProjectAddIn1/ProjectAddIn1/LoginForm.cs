@@ -76,17 +76,19 @@ namespace MS_Project_Import_Export
 
         private void btn_getDatabases_Click(object sender, EventArgs e)
         {
-            if (!urlOnEnter.Equals(urlTextBox.Text, StringComparison.CurrentCulture))
+            var url = urlTextBox.Text.Trim();
+            if (!urlOnEnter.Equals(url, StringComparison.CurrentCulture))
             {
                 databaseComboBox.Items.Clear();
-                databaseComboBox.Text = "";
+                databaseComboBox.Text = string.Empty;
 
-                if (!urlTextBox.Text.StartsWith(@"http://"))
+                if (!url.StartsWith(@"http://"))
                 {
-                    urlTextBox.Text = @"http://" + urlTextBox.Text;
+                    url = @"http://" + url;
+                    urlTextBox.Text = url;
                 }
 
-                List<string> dataBases = InnovatorManager.Instance.GetDataBases(urlTextBox.Text);
+                List<string> dataBases = InnovatorManager.Instance.GetDataBases(url);
                 if (dataBases != null)
                 {
                     foreach (string database in dataBases)

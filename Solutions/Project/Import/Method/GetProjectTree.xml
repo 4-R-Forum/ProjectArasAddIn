@@ -2,7 +2,6 @@
  <Item type="Method" id="5E6F436D8DCE4EBC8ECC7456193EF7CD" action="add">
   <execution_allowed_to keyed_name="World" type="Identity">A73B655731924CD0B027E4F4D5FCC0A9</execution_allowed_to>
   <method_code><![CDATA[Innovator innovatorInstance = this.getInnovator();
-System.Diagnostics.Debugger.Break();
 
 string projectId = this.getProperty("project_id", "");
 
@@ -57,6 +56,7 @@ static void AddSortNumbers(Item parent, ref int itemNumber, int level, Innovator
         var relationships =  parent.getRelationships();
         List<Item> tempItems = new List<Item>();
         string prevItemId = string.Empty;
+        List<Item> addedItems = new List<Item>();
         
         for(int i=0; i<relationships.getItemCount(); i++)
         {
@@ -71,6 +71,8 @@ static void AddSortNumbers(Item parent, ref int itemNumber, int level, Innovator
             
             if(item!=null)
             {
+                addedItems.Add(item);
+                
                 item.setProperty("inumber", itemNumber++.ToString());
                 item.setProperty("level", level.ToString());
                 
@@ -93,7 +95,21 @@ static void AddSortNumbers(Item parent, ref int itemNumber, int level, Innovator
             }
         }
         while (item != null);
-]]></method_code>
+        
+       if(tempItems.Count != addedItems.Count)
+        {
+            foreach (Item it in tempItems)
+            {
+                if (addedItems.Contains(it))
+                {
+                     continue;
+                }
+                
+                it.setProperty("inumber", itemNumber++.ToString());
+                it.setProperty("level", level.ToString());
+            }
+        }
+        ]]></method_code>
   <method_type>C#</method_type>
   <name>GetProjectTree</name>
  </Item>

@@ -163,7 +163,7 @@ namespace MS_Project_Import_Export
 
             while (currentItem.node != null)
             {
-                rowsIds.Add(currentItem.getProperty("id"), currentItem.getProperty("inumber", string.Empty));                
+                rowsIds.Add(currentItem.getProperty("id"), currentItem.getProperty("inumber", string.Empty));
                 var currentTask = tasks.Add(currentItem.getProperty("name"));
                 int level = int.Parse(currentItem.getProperty("level"));
                 if (level > currentTask.OutlineLevel)
@@ -191,7 +191,7 @@ namespace MS_Project_Import_Export
 
             setPredecessors(rootWBS, tasks, rowsIds);
         }
-        
+
         #endregion
 
         #region Private methods
@@ -304,7 +304,7 @@ namespace MS_Project_Import_Export
                 assignmentRelation.setProperty("source_id", row.Item.getID());
                 assignmentRelation.setProperty("percent_load", (assignment.Units * 100).ToString());
                 assignmentRelation.setProperty("work_est", Math.Round((double)assignment.Work / 60).ToString());
-                
+
                 // if the id of an Identity is known use it, otherwise use the Resource name as a role
                 if (!string.IsNullOrEmpty(assignmentId))
                 {
@@ -319,7 +319,7 @@ namespace MS_Project_Import_Export
                 uploadItems.appendItem(assignmentRelation);
                 if (row.Task.PercentComplete == 100)
                 {
-                    var promItem = InnovatorManager.Instance.CreatePromotionItem(assignmentRelation.getType(), "promoteItem", 
+                    var promItem = InnovatorManager.Instance.CreatePromotionItem(assignmentRelation.getType(), "promoteItem",
                         assignmentRelation.getID(), "Complete");
                     uploadItems.appendItem(promItem);
                 }
@@ -356,7 +356,7 @@ namespace MS_Project_Import_Export
 
         private void setTaskFromActivity(Task task, Item item, Resources resources, ref int uasCount)
         {
-            task.Duration = item.getProperty("expected_duration");            
+            task.Duration = item.getProperty("expected_duration");
             task.Start = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_start_target", item.getProperty("date_start_sched")));
             task.Finish = InnovatorManager.Instance.InnovatorDateToLocalDate(item.getProperty("date_due_target", item.getProperty("date_due_sched")));
             task.Estimated = false;
@@ -397,10 +397,13 @@ namespace MS_Project_Import_Export
                         continue;
                     }
 
-                    string predID = rowsIds[predecessors.getItemByIndex(y).getProperty("related_id")];
-                    PjTaskLinkType precType = (PjTaskLinkType)predecessorTypes[predecessors.getItemByIndex(y).getProperty("precedence_type")];
-                    var lead = predecessors.getItemByIndex(y).getProperty("lead_lag");
-                    tasks[taskIndex].TaskDependencies.Add(tasks[short.Parse(predID)], precType, lead);
+                    if (rowsIds.ContainsKey(predecessors.getItemByIndex(y).getProperty("related_id")))
+                    {
+                        string predID = rowsIds[predecessors.getItemByIndex(y).getProperty("related_id")];
+                        PjTaskLinkType precType = (PjTaskLinkType)predecessorTypes[predecessors.getItemByIndex(y).getProperty("precedence_type")];
+                        var lead = predecessors.getItemByIndex(y).getProperty("lead_lag");
+                        tasks[taskIndex].TaskDependencies.Add(tasks[short.Parse(predID)], precType, lead);
+                    }
                 }
             }
         }

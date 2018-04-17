@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectAddIn1", "ProjectAddIn1\ProjectAddIn1.csproj", "{AAAE0C3D-8EA7-4C65-A450-FC0D80F33AEA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectAddIn", "ProjectAddIn1\ProjectAddIn.csproj", "{AAAE0C3D-8EA7-4C65-A450-FC0D80F33AEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

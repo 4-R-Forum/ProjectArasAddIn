@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 #pragma warning disable 414
-namespace ProjectAddIn1 {
+namespace MS_Project_Import_Export {
     
     
     /// 

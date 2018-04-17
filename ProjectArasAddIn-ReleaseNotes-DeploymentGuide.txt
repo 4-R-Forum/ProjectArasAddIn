@@ -9,15 +9,14 @@ ProjectArasAddIn v0.1		First public release		04/14/2017
 												Export bug fixes				21/18/2017
 
 
-Deployment Guide
-	1. There is no package to Import to the database, and no setup is needed on the server.
-	2. A package is in the repository is required to Export from the database, use the ImportExport tool to apply it.
-	3. MS Project 2013 or 2016 must be installed on the client.
-	4. Download the repository from http://Github.com/ScriptSet6/ProjectArasAddIn
-	5. Remove any prior versions installed by uninstalling from ControlPanel/Programs and Features/ProjectAddIn1
-	6. Run setup.exe from the downloaded files
-	7. Confirm that the AddIn is installed by inspecting ControlPanel/Programs and Features, version 1.0.0.17
-	8. See UserGuide for User Tasks and steps
+Deployment Guide	
+	1. A package is in the repository is required to export to the database, use the ImportExport tool to apply it.
+	2. MS Project 2013 or 2016 must be installed on the client.
+	3. Download the repository from http://Github.com/ScriptSet6/ProjectArasAddIn
+	4. Remove any prior versions installed by uninstalling from ControlPanel/Programs and Features/ProjectAddIn1
+	5. Run setup.exe from the downloaded files
+	6. Confirm that the AddIn is installed by inspecting ControlPanel/Programs and Features, version 1.0.0.17
+	7. See UserGuide for User Tasks and steps
 	
 User Guide
 
@@ -40,10 +39,11 @@ Export Project
 	4. Enter credentials, these will be saved after first login, use a trailing / at the end of the url
 	5. Click Login -> Form closes, or displays error message
 	6. Select project number from dropdown in Ribbon AddIn
-	7. Click Aras to MS Project in Ribon -> Project starts to download
-	8. Downloaded project is displayed.
-	9. Save project as desired
-	10. It may be necessary to restart MS Project to export another project.
+	7. Select 'Auto Scheduled' mode (at the bottom of MS Project) to prevent tasks' dates modification.
+	8. Click Aras to MS Project in Ribon -> Project starts to download
+	9. Downloaded project is displayed.
+	10. Save project as desired
+	11. It may be necessary to restart MS Project to export another project.
 	
 Jon Hodge, 12/18/2017
 jhodge@aras.com

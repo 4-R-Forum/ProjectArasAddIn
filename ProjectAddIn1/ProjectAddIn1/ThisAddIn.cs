@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using MSProject = Microsoft.Office.Interop.MSProject;
 using Office = Microsoft.Office.Core;
 
-namespace ProjectAddIn1
+namespace MS_Project_Import_Export
 {
     public partial class ThisAddIn
     {

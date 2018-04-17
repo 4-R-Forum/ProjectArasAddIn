@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProjectAddIn1.Properties {
+namespace MS_Project_Import_Export.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -20,6 +20,42 @@ namespace ProjectAddIn1.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InnovatorServerURL {
+            get {
+                return ((string)(this["InnovatorServerURL"]));
+            }
+            set {
+                this["InnovatorServerURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InnovatorDatabaseName {
+            get {
+                return ((string)(this["InnovatorDatabaseName"]));
+            }
+            set {
+                this["InnovatorDatabaseName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InnovatorUserName {
+            get {
+                return ((string)(this["InnovatorUserName"]));
+            }
+            set {
+                this["InnovatorUserName"] = value;
             }
         }
     }

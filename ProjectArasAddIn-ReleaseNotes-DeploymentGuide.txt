@@ -22,7 +22,7 @@ Deployment Guide
 	6. Download the repository from http://Github.com/4-r-forum/ProjectArasAddIn
 	7. Remove any prior versions installed by uninstalling from ControlPanel/Programs and Features/ProjectAddIn1
 	8. Run setup.exe from the root folder of the repository
-	9. Confirm that the AddIn is installed by inspecting ControlPanel/Programs and Features, version 1.0.0.19
+	9. Confirm that the AddIn is installed by inspecting ControlPanel/Programs and Features, version 1.0.0.21
 	10. See UserGuide below for User Tasks and steps
 	
 User Guide

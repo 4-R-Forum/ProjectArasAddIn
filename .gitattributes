@@ -35,6 +35,8 @@
 #*.sqlproj   merge=binary
 #*.wwaproj   merge=binary
 
+
+
 ###############################################################################
 # behavior for image files
 #
@@ -61,3 +63,8 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+
+*.vsto binary
+*.deploy binary
+*.manifest binary

@@ -3,3 +3,4 @@
 cmd.exe.lnk
 gitk.cmd.lnk
 /ProjectAddIn1/ProjectAddIn1/*.user
+ProjectAddIn1/ProjectAddIn1/bin

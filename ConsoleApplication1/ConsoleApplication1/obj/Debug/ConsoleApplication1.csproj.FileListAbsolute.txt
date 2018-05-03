@@ -1,5 +1,0 @@
-C:\Repos\ProjectArasAddIn\ConsoleApplication1\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
-C:\Repos\ProjectArasAddIn\ConsoleApplication1\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
-C:\Repos\ProjectArasAddIn\ConsoleApplication1\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
-C:\Repos\ProjectArasAddIn\ConsoleApplication1\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
-C:\Repos\ProjectArasAddIn\ConsoleApplication1\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb

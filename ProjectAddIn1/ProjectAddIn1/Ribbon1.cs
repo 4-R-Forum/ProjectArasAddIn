@@ -186,10 +186,10 @@ namespace ProjectAddIn1
             iProject.setProperty("date_due_target", cd(ap.Finish));
             iProject.setProperty("project_number", innovProjNum);
             iProject.setProperty("scheduling_type", "Forward");
-            iProject.setProperty("scheduling_method", "7DC85B0668134E949B9212D7CE199265");
-            iProject.setProperty("update_method", "6E1133AB87A44D529DF5F9D1FD740100");
-            iProject.setProperty("scheduling_mode", "1");
-            iProject.setProperty("project_update_mode", "1");
+            //iProject.setProperty("scheduling_method", "7DC85B0668134E949B9212D7CE199265");
+            //iProject.setProperty("update_method", "6E1133AB87A44D529DF5F9D1FD740100");
+            //iProject.setProperty("scheduling_mode", "1");
+            //iProject.setProperty("project_update_mode", "1");
 
             iProject.setProperty("name", ap.Name);
             iProject.setProperty("wbs_id", wbs_id);

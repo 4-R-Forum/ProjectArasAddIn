@@ -11,6 +11,7 @@ namespace MS_Project_Import_Export
     {
         private List<Row> rows;
         private Item uploadItems;
+        private Item thisItem;
 
         #region Dictionaries
 
@@ -32,7 +33,7 @@ namespace MS_Project_Import_Export
 
         #endregion
 
-        #region Public methods
+            #region Public methods
 
         /// <summary>
         /// 
@@ -44,6 +45,7 @@ namespace MS_Project_Import_Export
         {
             rows = new List<Row>();
             uploadItems = InnovatorManager.Instance.CreateNewItem();
+            thisItem = InnovatorManager.Instance.CreateNewItem();
             string errorIds = string.Empty;
 
             // check there are no empty rows or dependencies to rollup task
@@ -106,14 +108,17 @@ namespace MS_Project_Import_Export
             Item topWBSItem = InnovatorManager.Instance.CreateNewItem("WBS Element", "add"); // create Top WBS      
             topWBSItem.setProperty("name", activeProject.Title);
             topWBSItem.setProperty("is_top", "1");
-            uploadItems.appendItem(topWBSItem);
+            //uploadItems.appendItem(topWBSItem);
+            applyThisItem(topWBSItem);
 
             Item projectItem = InnovatorManager.Instance.CreateProjectItem(activeProject.Name, topWBSItem.getID(), activeProject.Start, activeProject.Finish);
             uploadItems.appendItem(projectItem);
+            applyThisItem(projectItem);
 
             processRows(rows, topWBSItem.getID(), projectItem.getProperty("project_number"));
             addPredecessors();
 
+            /* don't need this, is index(0) a placeholder?
             if (uploadItems.isCollection())
             {
                 uploadItems.removeItem(uploadItems.getItemByIndex(0));
@@ -125,14 +130,14 @@ namespace MS_Project_Import_Export
                 errorString = response.getErrorString();
                 return false;
             }
-
+            */
             var sProject = InnovatorManager.Instance.CreateNewItem("Project");
             sProject.setID(projectItem.getID());
-            response = sProject.apply("Schedule Project");
+            sProject = sProject.apply("Schedule Project");
 
-            if (response.isError())
+            if (sProject.isError())
             {
-                errorString = response.getErrorString();
+                errorString = sProject.getErrorString(); /// TODO where is errorString declared?
                 return false;
             }
 
@@ -218,14 +223,15 @@ namespace MS_Project_Import_Export
         private void addWBS(Row row, string wbsId)
         {
             row.Item.setProperty("name", row.Task.Name);
-            uploadItems.appendItem(row.Item);
-
+            //uploadItems.appendItem(row.Item);
+            applyThisItem(row.Item);
             // add subWBS
             var relationship = InnovatorManager.Instance.CreateNewItem("Sub WBS", "add");
             var sourceId = (row.Task.OutlineParent.ID == 0) ? wbsId : rows.FirstOrDefault(r => r.Task.ID == row.Task.OutlineParent.ID)?.Item.getID();
             relationship.setProperty("source_id", sourceId);
             relationship.setProperty("related_id", row.Item.getID());
-            uploadItems.appendItem(relationship);
+            //uploadItems.appendItem(relationship);
+            applyThisItem(relationship);
         }
 
         private void addActivity(Row row, string wbsId, string projectNumber)
@@ -251,13 +257,15 @@ namespace MS_Project_Import_Export
             {
                 row.Item.setProperty("expected_duration", Math.Round((double)row.Task.Duration / 60 / 8).ToString()); //Duration is in minutes
             }
-            uploadItems.appendItem(row.Item);
+            //uploadItems.appendItem(row.Item);
+            applyThisItem(row.Item);
 
             Item relationship = InnovatorManager.Instance.CreateNewItem("WBS Activity2", "add");
             var sourceId = (row.Task.OutlineParent.ID == 0) ? wbsId : rows.FirstOrDefault(r => r.Task.ID == row.Task.OutlineParent.ID)?.Item.getID();
             relationship.setProperty("source_id", sourceId);
             relationship.setProperty("related_id", row.Item.getID());
-            uploadItems.appendItem(relationship);
+            //uploadItems.appendItem(relationship);
+            applyThisItem(relationship);
 
             //Add Assigments
             addAssignments(row);
@@ -267,7 +275,8 @@ namespace MS_Project_Import_Export
             if (row.Task.PercentComplete == 100)
             {
                 Item promItem = InnovatorManager.Instance.CreatePromotionItem("Activity2", "promoteItem", row.Item.getID(), "Complete");
-                uploadItems.appendItem(promItem);
+                //uploadItems.appendItem(promItem);
+                applyThisItem(promItem);
             }
         }
 
@@ -316,12 +325,14 @@ namespace MS_Project_Import_Export
                 }
 
                 // apply the assignment Item, and promote it to complete if the MSProject row is complete
-                uploadItems.appendItem(assignmentRelation);
+                // uploadItems.appendItem(assignmentRelation);
+                applyThisItem(assignmentRelation);
                 if (row.Task.PercentComplete == 100)
                 {
                     var promItem = InnovatorManager.Instance.CreatePromotionItem(assignmentRelation.getType(), "promoteItem",
                         assignmentRelation.getID(), "Complete");
-                    uploadItems.appendItem(promItem);
+                    //uploadItems.appendItem(promItem);
+                    applyThisItem(promItem);
                 }
             }
         }
@@ -348,7 +359,8 @@ namespace MS_Project_Import_Export
                         predItem.setProperty("lead_lag", Math.Round((double)dependency.Lag / 60 / 8).ToString()); //Lag is minutes in 8 hour day
                         predItem.setProperty("source_id", row.Item.getID());
                         predItem.setProperty("related_id", rows.FirstOrDefault(r => r.Task.ID == dependency.From.ID)?.Item.getID());
-                        uploadItems.appendItem(predItem);
+                        //uploadItems.appendItem(predItem);
+                        applyThisItem(predItem);
                     }
                 }
             }
@@ -405,6 +417,16 @@ namespace MS_Project_Import_Export
                         tasks[taskIndex].TaskDependencies.Add(tasks[short.Parse(predID)], precType, lead);
                     }
                 }
+            }
+        }
+
+        private void applyThisItem(Item this_item)
+        {
+            this_item = this_item.apply();
+            if (this_item.isError())
+            {
+                MessageBox.Show(this_item.getErrorString(), Properties.Resources.TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
 

@@ -1,0 +1,85 @@
+<AML>
+ <Item type="SQL" id="CF2B5FA9FC494722B211EC5B67EE1314" action="add">
+  <execution_count>4</execution_count>
+  <execution_flag>immediate</execution_flag>
+  <name>select_project_list2</name>
+  <old_name>select_project_list2</old_name>
+  <sqlserver_body><![CDATA[CREATE FUNCTION innovator.select_project_list2 (@PROJECT_ID as char(32))
+RETURNS @PROJECT_LIST TABLE (N INTEGER, L INTEGER,  AN INTEGER, TYPE CHAR(1), ID CHAR(32) primary key, name varchar(128), prev_item varchar(32), parent_id char(32))
+AS
+begin
+DECLARE @WBS_ID CHAR(32)
+DECLARE  @ACTIVITIES  TABLE (ID CHAR(32) primary key)
+DECLARE @WBS  TABLE (ID CHAR(32) primary key)
+DECLARE @STACK TABLE (L INTEGER primary key,ID CHAR(32))
+DECLARE @NEXT CHAR(32)
+DECLARE @FIRST_CHILD char(32)
+DECLARE @N INTEGER
+DECLARE @AN INTEGER
+DECLARE @L INTEGER
+  -- get wbs_id
+   set @wbs_id =  (select wbs_id from project where id=@project_id)
+   if @wbs_id is null set @wbs_id =  (select wbs_id from project_template where id=@project_id)
+  -- get activities
+  INSERT @ACTIVITIES
+  SELECT * FROM SELECT_ACTIVITIES(@WBS_ID)
+  -- get wbs
+  INSERT @WBS
+  SELECT ID FROM SELECT_WBS_ELEMENTS(@WBS_ID)
+  -- get unordered list of wbs and activities
+  insert @PROJECT_LIST 
+  SELECT    null, null , null ,'W' AS type, WBS_ELEMENT.id, WBS_ELEMENT.name, WBS_ELEMENT.prev_item, PARENT.id AS parent_id
+  FROM         WBS_ELEMENT PARENT INNER JOIN
+                        SUB_WBS ON PARENT.id = SUB_WBS.source_id RIGHT OUTER JOIN
+                        WBS_ELEMENT ON SUB_WBS.related_id = WBS_ELEMENT.id
+  WHERE     (wbs_element.id in (select * from @WBS))
+  UNION ALL
+  SELECT    null, null ,null ,'A' AS type, ACTIVITY2.id, ACTIVITY2.name, ACTIVITY2.prev_item, WBS_ELEMENT.id AS parent_id
+  FROM         ACTIVITY2 INNER JOIN
+                        WBS_ACTIVITY2 ON ACTIVITY2.id = WBS_ACTIVITY2.related_id INNER JOIN
+                        WBS_ELEMENT ON WBS_ACTIVITY2.source_id = WBS_ELEMENT.id
+  WHERE     (activity2.id in (select * from @ACTIVITIES))
+  -- build ordered list
+  -- get top element
+  SET @N=0
+  SET @L=0
+  SET @AN=0
+  set @NEXT= (select id from @PROJECT_LIST where ((( prev_item is null) or prev_item='')) and (parent_id is null))
+     SET @N= @N+1
+     UPDATE @PROJECT_LIST SET N= @N, L=@L WHERE ID = @NEXT
+    set @NEXT=(SELECT  ID FROM @PROJECT_LIST WHERE ((PREV_ITEM IS NULL) OR (PREV_ITEM='')) AND (PARENT_ID=@NEXT))
+   while (NOT @NEXT IS NULL)
+  begin
+    SET @N= @N+1
+    UPDATE @PROJECT_LIST SET N= @N, L=@L+1 WHERE ID =  @NEXT
+    IF (( SELECT TYPE FROM @PROJECT_LIST WHERE ID =  @NEXT)='A')
+       begin
+          SET @AN=@AN+1
+          UPDATE @PROJECT_LIST SET AN= @AN WHERE ID =  @NEXT
+       end
+    set @FIRST_CHILD=(SELECT  ID FROM @PROJECT_LIST WHERE ((PREV_ITEM IS NULL) OR (PREV_ITEM='')) AND (PARENT_ID=@NEXT))
+    IF (NOT @FIRST_CHILD IS NULL)
+    begin
+        SET @L=@L+1
+        DELETE @STACK WHERE L=@L
+        INSERT @STACK SELECT @L, @NEXT
+        SET @NEXT=@FIRST_CHILD
+      end
+    ELSE
+      begin
+        SET @NEXT = ( SELECT TOP 1 ID FROM @PROJECT_LIST WHERE (PREV_ITEM=@NEXT))
+       end
+    WHILE ((@NEXT IS NULL) AND (@L > 0))
+      begin
+         set @NEXT = (SELECT ID FROM  @PROJECT_LIST WHERE (PREV_ITEM=(SELECT ID FROM @STACK WHERE L=@L)))
+        SET @L=@L-1
+      end
+  end
+RETURN
+end
+]]></sqlserver_body>
+  <stale>0</stale>
+  <transform_first>0</transform_first>
+  <type>function</type>
+ </Item>
+</AML>

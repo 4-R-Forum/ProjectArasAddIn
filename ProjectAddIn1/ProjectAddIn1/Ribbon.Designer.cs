@@ -37,10 +37,10 @@
             Microsoft.Office.Tools.Ribbon.RibbonDialogLauncher ribbonDialogLauncherImpl1 = this.Factory.CreateRibbonDialogLauncher();
             this.tab1 = this.Factory.CreateRibbonTab();
             this.ArasMSProject = this.Factory.CreateRibbonGroup();
-            this.dd_projects = this.Factory.CreateRibbonDropDown();
             this.btn_loginToAras = this.Factory.CreateRibbonButton();
             this.btn_projectToAras = this.Factory.CreateRibbonButton();
             this.btn_arasToProject = this.Factory.CreateRibbonButton();
+            this.dd_projects = this.Factory.CreateRibbonDropDown();
             this.tab1.SuspendLayout();
             this.ArasMSProject.SuspendLayout();
             this.SuspendLayout();
@@ -62,12 +62,6 @@
             this.ArasMSProject.Items.Add(this.dd_projects);
             this.ArasMSProject.Label = "Aras";
             this.ArasMSProject.Name = "ArasMSProject";
-            // 
-            // dd_projects
-            // 
-            this.dd_projects.Enabled = false;
-            this.dd_projects.Label = "Select";
-            this.dd_projects.Name = "dd_projects";
             // 
             // btn_loginToAras
             // 
@@ -91,6 +85,12 @@
             this.btn_arasToProject.Name = "btn_arasToProject";
             this.btn_arasToProject.ShowImage = true;
             this.btn_arasToProject.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_arasToProject_Click);
+            // 
+            // dd_projects
+            // 
+            this.dd_projects.Enabled = false;
+            this.dd_projects.Label = "Select";
+            this.dd_projects.Name = "dd_projects";
             // 
             // Ribbon
             // 

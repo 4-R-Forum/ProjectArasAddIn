@@ -17,3 +17,4 @@ C:\Repos\ProjectArasAddIn\ProjectAddIn1\ProjectAddIn1\bin\Debug\IOM.pdb
 C:\Repos\ProjectArasAddIn\ProjectAddIn1\ProjectAddIn1\obj\Debug\MS_Project_Import_Export.dll
 C:\Repos\ProjectArasAddIn\ProjectAddIn1\ProjectAddIn1\obj\Debug\MS_Project_Import_Export.pdb
 C:\Repos\ProjectArasAddIn\ProjectAddIn1\ProjectAddIn1\obj\Debug\ProjectAddIn.csproj.CopyComplete
+C:\Repos\ProjectArasAddIn\ProjectAddIn1\ProjectAddIn1\obj\Debug\ProjectAddIn.csprojAssemblyReference.cache

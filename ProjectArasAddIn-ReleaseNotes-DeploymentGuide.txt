@@ -2,15 +2,19 @@ Project Aras AddIn
 
 Release notes
 
-This AddIn provides functionality to Import and Export MS Project .mpp files to and from Aras Innovator Projects. It supports 64-bit applications Project 2013 and 2016 and is tested with Innovator v11SP9 and v11SP12. A different AddIn will be required for 32-bit versions such as Project 2010 and earlier. Earlier Project Import Export packages used .Net controls which are not supported by standards based browsers: Chrome, Firefox and Edge.
+This AddIn provides functionality to Import and Export MS Project .mpp files to and from Aras Innovator Projects. v0.3 supports 64-bit applications Project 2019 and is tested with Innovator v12SP3 and Project v12.0R1. Different AddIns will be required for 32-bit versions such as Project 2010 and earlier. Earlier Project Import Export packages used .Net controls which are not supported by standards based browsers: Chrome, Firefox and Edge.
+
+v0.3 returns to the use of SQL Items for project download, the recursive Method in v0.2 runs out of memory for anything but small projects. Some in the community eschew the use of SQL Items, however they are a necessary part of the released Project Application. One of the objections to the use of SQL is that it does not act upon AML permissions. Project WBS structure and the critiacal path method for scheduling must act upon a single set of data. Consequently the application of user permissions would defeat the principles of project managment.
 
 
 ProjectArasAddIn v0.1
 	First public release			04/14/2017
 	Package for Export				10/23/2017
-	Export bug fixes				12/18/2017
+	Export bug fixes					12/18/2017
 ProjectArasAddIn v0.2
 	GetProjectTree Method AML only	04/18/2018
+ProjectArasAddIn v0.3, build 1.0.0.31
+  Updated for v12SP3 and Project v12.0R1	08/23/2020
 	
 
 
@@ -18,11 +22,11 @@ Deployment Guide
 	1. A package is in the repository is required to export to the database.
 	3. Use the PackageImportExportUtilities Export tool to import Solutions\imports.mf file.
 	4. No changes are required to the Innovator tree.
-	5. MS Project 2013 or 2016 must be installed on the client.
+	5. MS Project 2019 must be installed on the client.
 	6. Download the repository from http://Github.com/4-r-forum/ProjectArasAddIn
 	7. Remove any prior versions installed by uninstalling from ControlPanel/Programs and Features/ProjectAddIn1
 	8. Run setup.exe from the root folder of the repository
-	9. Confirm that the AddIn is installed by inspecting ControlPanel/Programs and Features, version 1.0.0.22
+	9. Confirm that the AddIn is installed by inspecting ControlPanel/Programs and Features, version 1.0.0.31
 	10. See UserGuide below for User Tasks and steps
 	
 User Guide
@@ -52,5 +56,5 @@ Export Project
 	10. Save project as desired
 	11. It may be necessary to restart MS Project to export another project.
 	
-Jon Hodge, 04/18/2018
-jhodge@aras.com
+Jon Hodge, 08/23/2020
+jhodge@4-R-Forum.org

@@ -131,55 +131,6 @@ namespace MS_Project_Import_Export
 
         public void DownloadProject(Project activeProject, string projectId)
         {
-            //Item rootWBS = InnovatorManager.Instance.CreateNewItem("WBS Element", "select_project_tree");
-            //rootWBS.setProperty("project_id", projectId);
-            //rootWBS = rootWBS.apply();
-            //if (rootWBS.isError())
-            //{
-            //    MessageBox.Show(rootWBS.getErrorString(), Properties.Resources.TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;
-            //}
-
-            //// create a dictionary object to convert ids to row numbers, using key=id, value= row number
-            //// create a dictionary object to convert converting scheduling_type values to MSProject constants
-            //Dictionary<string, string> rowsIds = new Dictionary<string, string>();
-
-            //var tasks = activeProject.Tasks;
-            //var resources = activeProject.Resources;
-            //int uasCount = 1; // counter for unknown assigments
-            //int itemNumber = 1;
-            //var currentItem = rootWBS.getItemsByXPath("//Item[inumber='" + itemNumber + "']");
-
-            //while (currentItem.node != null)
-            //{
-            //    rowsIds.Add(currentItem.getProperty("id"), currentItem.getProperty("inumber", string.Empty));
-            //    var currentTask = tasks.Add(currentItem.getProperty("name"));
-            //    int level = int.Parse(currentItem.getProperty("level"));
-            //    if (level > currentTask.OutlineLevel)
-            //    {
-            //        currentTask.OutlineIndent();
-            //    }
-            //    else
-            //    {
-            //        while (currentTask.OutlineLevel > level)
-            //        {
-            //            currentTask.OutlineOutdent();
-            //        }
-            //    }
-
-            //    switch (currentItem.getType())
-            //    {
-            //        case "WBS Element":
-            //            break;
-            //        case "Activity2":
-            //            setTaskFromActivity(currentTask, currentItem, resources, ref uasCount);
-            //            break;
-            //    }
-            //    currentItem = rootWBS.getItemsByXPath("//Item[inumber='" + (++itemNumber).ToString() + "']");
-            //}
-
-            //setPredecessors(rootWBS, tasks, rowsIds);
-            //I18NSessionContext cntx = innov.getI18NSessionContext();
             var ap = activeProject;
 
             // first call server method to get an ordered list of project rows
@@ -196,11 +147,7 @@ namespace MS_Project_Import_Export
             // create a dictionary object to convert ids to row numbers
             // using key=id, value= row number
             Dictionary<string, string> d = new Dictionary<string, string>();
-            // create a dictionary object to convert converting scheduling_type values to MSProject constants
-
-
-            //ap = Globals.ThisAddIn.Application.ActiveProject = new Project();
-            string root = tree.getItemByIndex(0).getProperty("id");
+ 
             var at = ap.Tasks;
             var r = ap.Resources;
             var u = 1; // counter for unknown assigments
@@ -257,7 +204,6 @@ namespace MS_Project_Import_Export
                         break;
                 }
             }
-
 
             // traverse tasks again, the first time there could have been predecessors not created yet
             for (int x = 1; x < tree.getItemCount(); x++)

@@ -131,54 +131,158 @@ namespace MS_Project_Import_Export
 
         public void DownloadProject(Project activeProject, string projectId)
         {
-            Item rootWBS = InnovatorManager.Instance.CreateNewItem("WBS Element", "select_project_tree");
-            rootWBS.setProperty("project_id", projectId);
-            rootWBS = rootWBS.apply();
-            if (rootWBS.isError())
+            //Item rootWBS = InnovatorManager.Instance.CreateNewItem("WBS Element", "select_project_tree");
+            //rootWBS.setProperty("project_id", projectId);
+            //rootWBS = rootWBS.apply();
+            //if (rootWBS.isError())
+            //{
+            //    MessageBox.Show(rootWBS.getErrorString(), Properties.Resources.TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            //// create a dictionary object to convert ids to row numbers, using key=id, value= row number
+            //// create a dictionary object to convert converting scheduling_type values to MSProject constants
+            //Dictionary<string, string> rowsIds = new Dictionary<string, string>();
+
+            //var tasks = activeProject.Tasks;
+            //var resources = activeProject.Resources;
+            //int uasCount = 1; // counter for unknown assigments
+            //int itemNumber = 1;
+            //var currentItem = rootWBS.getItemsByXPath("//Item[inumber='" + itemNumber + "']");
+
+            //while (currentItem.node != null)
+            //{
+            //    rowsIds.Add(currentItem.getProperty("id"), currentItem.getProperty("inumber", string.Empty));
+            //    var currentTask = tasks.Add(currentItem.getProperty("name"));
+            //    int level = int.Parse(currentItem.getProperty("level"));
+            //    if (level > currentTask.OutlineLevel)
+            //    {
+            //        currentTask.OutlineIndent();
+            //    }
+            //    else
+            //    {
+            //        while (currentTask.OutlineLevel > level)
+            //        {
+            //            currentTask.OutlineOutdent();
+            //        }
+            //    }
+
+            //    switch (currentItem.getType())
+            //    {
+            //        case "WBS Element":
+            //            break;
+            //        case "Activity2":
+            //            setTaskFromActivity(currentTask, currentItem, resources, ref uasCount);
+            //            break;
+            //    }
+            //    currentItem = rootWBS.getItemsByXPath("//Item[inumber='" + (++itemNumber).ToString() + "']");
+            //}
+
+            //setPredecessors(rootWBS, tasks, rowsIds);
+            //I18NSessionContext cntx = innov.getI18NSessionContext();
+            var ap = activeProject;
+
+            // first call server method to get an ordered list of project rows
+            Item z = InnovatorManager.Instance.CreateNewItem("Project", "select_project_tree");
+            //Item z = innov.newItem("Project", "select_project_tree");
+            //string this_project_id = dd_projects.SelectedItem.Tag.ToString(); //"5266E1D280F84861A1BBCF5E50A9C65B";
+            z.setID(projectId);
+            Item tree = z.apply();
+            if (tree.isError())
             {
-                MessageBox.Show(rootWBS.getErrorString(), Properties.Resources.TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error getting Project Tree");
                 return;
             }
-
-            // create a dictionary object to convert ids to row numbers, using key=id, value= row number
+            // create a dictionary object to convert ids to row numbers
+            // using key=id, value= row number
+            Dictionary<string, string> d = new Dictionary<string, string>();
             // create a dictionary object to convert converting scheduling_type values to MSProject constants
-            Dictionary<string, string> rowsIds = new Dictionary<string, string>();
 
-            var tasks = activeProject.Tasks;
-            var resources = activeProject.Resources;
-            int uasCount = 1; // counter for unknown assigments
-            int itemNumber = 1;
-            var currentItem = rootWBS.getItemsByXPath("//Item[inumber='" + itemNumber + "']");
 
-            while (currentItem.node != null)
+            //ap = Globals.ThisAddIn.Application.ActiveProject = new Project();
+            string root = tree.getItemByIndex(0).getProperty("id");
+            var at = ap.Tasks;
+            var r = ap.Resources;
+            var u = 1; // counter for unknown assigments
+                       // populate the MSProject and dictionary object
+            for (var x = 1; x < tree.getItemCount(); x++)
             {
-                rowsIds.Add(currentItem.getProperty("id"), currentItem.getProperty("inumber", string.Empty));
-                var currentTask = tasks.Add(currentItem.getProperty("name"));
-                int level = int.Parse(currentItem.getProperty("level"));
-                if (level > currentTask.OutlineLevel)
+                Item task = tree.getItemByIndex(x);
+                d.Add(task.getProperty("id"), (Int16.Parse(task.getProperty("n")) - 1).ToString());
+                at.Add(task.getProperty("name"));
+                int lev = Int16.Parse(task.getProperty("l"));
+                if (lev > at[x].OutlineLevel)
                 {
-                    currentTask.OutlineIndent();
+                    at[x].OutlineIndent();
                 }
                 else
                 {
-                    while (currentTask.OutlineLevel > level)
+                    while (at[x].OutlineLevel > lev)
                     {
-                        currentTask.OutlineOutdent();
+                        at[x].OutlineOutdent();
                     }
                 }
-
-                switch (currentItem.getType())
+                switch (task.getType())
                 {
-                    case "WBS Element":
+                    case "W":
+                        Item wbs = InnovatorManager.Instance.CreateNewItem("WBS Element", "get");
+                        wbs.setID(task.getProperty("id"));
+                        wbs = wbs.apply();
                         break;
-                    case "Activity2":
-                        setTaskFromActivity(currentTask, currentItem, resources, ref uasCount);
+                    case "A":
+                        Item act = InnovatorManager.Instance.CreateNewItem("Activity2", "get");
+                        act.setID(task.getProperty("id"));
+                        var assts = InnovatorManager.Instance.CreateNewItem("Activity2 Assignment", "get");
+                        assts.setAttribute("select", "role,related_id,percent_load,work_est");
+                        assts.setAttribute("related_expand", "0");
+                        act.addRelationship(assts);
+                        act = act.apply();
+                        at[x].Duration = act.getProperty("expected_duration");
+                        at[x].Start = InnovatorManager.Instance.InnovatorDateToLocalDate(act.getProperty("date_due_sched"));
+                        at[x].Finish = InnovatorManager.Instance.InnovatorDateToLocalDate(act.getProperty("date_due_sched"));
+                        at[x].Estimated = false;
+                        var res = act.getItemsByXPath("//Item[@type='Activity2 Assignment']");
+                        for (var y = 0; y < res.getItemCount(); y++)
+                        {
+                            string name = res.getItemByIndex(y).getPropertyAttribute("related_id", "keyed_name");
+                            if (string.IsNullOrEmpty(name))
+                            {
+                                name = res.getItemByIndex(y).getProperty("role", "Unknown");
+                                if (name == "Unknown") { name += u; u += 1; }
+                            }
+                            var units = res.getItemByIndex(y).getProperty("percent_load");
+                            try { var n = r[name]; } catch (System.Exception ex) { r.Add(name); }
+                            at[x].Assignments.Add(at[x].ID, r[name].ID);
+                        }
                         break;
                 }
-                currentItem = rootWBS.getItemsByXPath("//Item[inumber='" + (++itemNumber).ToString() + "']");
             }
 
-            setPredecessors(rootWBS, tasks, rowsIds);
+
+            // traverse tasks again, the first time there could have been predecessors not created yet
+            for (int x = 1; x < tree.getItemCount(); x++)
+            {
+                Item task = tree.getItemByIndex(x);
+
+                if (task.getType() == "A")
+                {
+                    Item act = InnovatorManager.Instance.CreateNewItem("Activity2", "get");
+                    act.setID(task.getProperty("id"));
+                    var preds = InnovatorManager.Instance.CreateNewItem("Predecessor", "get");
+                    preds.setAttribute("select", "related_id,precedence_type,lead_lag");
+                    preds.setAttribute("related_expand", "0");
+                    act.addRelationship(preds);
+                    act = act.apply();
+                    var pred = act.getItemsByXPath("//Item[@type='Predecessor']");
+                    for (int y = 0; y < pred.getItemCount(); y++)
+                    {
+                        string PredID = d[pred.getItemByIndex(y).getProperty("related_id")];
+                        PjTaskLinkType precType = (PjTaskLinkType) predecessorTypes[pred.getItemByIndex(y).getProperty("precedence_type")];
+                        var lead = pred.getItemByIndex(y).getProperty("lead_lag");
+                        at[x].TaskDependencies.Add(at[short.Parse(PredID)], precType, lead);
+                    }
+                }
+            }
         }
 
         #endregion
